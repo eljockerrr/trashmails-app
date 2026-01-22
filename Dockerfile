@@ -15,7 +15,11 @@ RUN composer install --no-dev --optimize-autoloader
 RUN cp .env.example .env || true
 RUN php artisan key:generate || true
 
-# ✅ Fix permissions (important)
-RUN chown -R www-data:www-data /var/www/html
+# ✅ Fix permissions (strong)
+RUN chown -R www-data:www-data /var/www/html \
+    && chmod -R ug+rwX /var/www/html
+
+# ✅ (Optional but fixes your exact error) make that package path writable
+RUN chmod -R ug+rwX /var/www/html/vendor/artisync/image/src || true
 
 EXPOSE 80
